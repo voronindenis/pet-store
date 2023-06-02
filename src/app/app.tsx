@@ -1,3 +1,5 @@
+import { AuthenticationProvider } from '~/features/Authentication';
+
 export const App = () => {
-  return <>'Future App'</>;
+  return <AuthenticationProvider>'Future App'</AuthenticationProvider>;
 };

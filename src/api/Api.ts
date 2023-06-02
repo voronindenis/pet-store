@@ -167,7 +167,7 @@ export class HttpClient<SecurityDataType = unknown> {
   constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
     this.instance = axios.create({
       ...axiosConfig,
-      baseURL: axiosConfig.baseURL || 'https://petstore3.swagger.io/api/v3',
+      baseURL: axiosConfig.baseURL || '/api/v3',
     });
     this.secure = secure;
     this.format = format;

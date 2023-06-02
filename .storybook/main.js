@@ -1,10 +1,16 @@
 const config = {
-  stories: ['../src/app/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
-  addons: ['@storybook/addon-essentials', '@nx/react/plugins/storybook'],
+  stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+  addons: [
+    '@storybook/addon-essentials',
+    '@nx/react/plugins/storybook',
+    '@storybook/addon-controls',
+    '@storybook/addon-actions',
+  ],
   framework: {
     name: '@storybook/react-webpack5',
     options: {},
   },
+  staticDirs: ['../public'],
 };
 
 export default config;

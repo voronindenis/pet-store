@@ -2,7 +2,29 @@
   "extends": ["plugin:@nx/react"],
   "root": true,
   "ignorePatterns": ["!**/*"],
-  "plugins": ["@nx"],
+  "plugins": ["@nx", "eslint-plugin-import-helpers"],
+  "rules": {
+    "import-helpers/order-imports": [
+      "error",
+      {
+        "groups": [
+          "/^react$/",
+          "module",
+          "/^~/",
+          "parent",
+          [
+            "sibling",
+            "index"
+          ]
+        ],
+        "newlinesBetween": "always",
+        "alphabetize": {
+          "order": "asc",
+          "ignoreCase": true
+        }
+      }
+    ]
+  },
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"],

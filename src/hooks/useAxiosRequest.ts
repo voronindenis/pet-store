@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { AxiosRequestConfig, AxiosResponse, ResponseType } from 'axios';
 
