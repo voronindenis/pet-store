@@ -1,3 +1,16 @@
 {
-  "singleQuote": true
+  "semi": true,
+  "singleQuote": true,
+  "quoteProps": "as-needed",
+  "jsxSingleQuote": true,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "always",
+  "proseWrap": "preserve",
+  "htmlWhitespaceSensitivity": "css",
+  "singleAttributePerLine": true,
+  "insertPragma": false,
+  "requirePragma": false,
+  "printWidth": 120
 }
