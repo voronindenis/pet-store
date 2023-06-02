@@ -1,5 +1,10 @@
 import { AuthenticationProvider } from '~/features/Authentication';
+import { Pets } from '~/features/Pets';
 
 export const App = () => {
-  return <AuthenticationProvider>'Future App'</AuthenticationProvider>;
+  return (
+    <AuthenticationProvider>
+      <Pets />
+    </AuthenticationProvider>
+  );
 };

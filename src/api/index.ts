@@ -1,2 +1,2 @@
-export type { IUser } from './Api';
+export type { IUser, IPet } from './Api';
 export { getApi } from './apiGetter';
