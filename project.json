@@ -1,5 +1,5 @@
 {
-  "name": "movies-database",
+  "name": "pet-store",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "./src",
   "projectType": "application",
@@ -10,7 +10,7 @@
       "defaultConfiguration": "production",
       "options": {
         "compiler": "babel",
-        "outputPath": "dist/movies-database",
+        "outputPath": "dist/pet-store",
         "index": "src/index.html",
         "baseHref": "/",
         "main": "src/main.tsx",
@@ -48,15 +48,15 @@
       "executor": "@nx/webpack:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "movies-database:build",
+        "buildTarget": "pet-store:build",
         "hmr": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "movies-database:build:development"
+          "buildTarget": "pet-store:build:development"
         },
         "production": {
-          "buildTarget": "movies-database:build:production",
+          "buildTarget": "pet-store:build:production",
           "hmr": false
         }
       }
@@ -71,7 +71,7 @@
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "movies-database:build"
+        "buildTarget": "pet-store:build"
       }
     },
     "test": {
@@ -104,7 +104,7 @@
       "executor": "@nx/storybook:build",
       "outputs": ["{options.outputDir}"],
       "options": {
-        "outputDir": "dist/storybook/movies-database",
+        "outputDir": "dist/storybook/pet-store",
         "configDir": "./.storybook"
       },
       "configurations": {
@@ -116,12 +116,12 @@
     "static-storybook": {
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "movies-database:build-storybook",
-        "staticFilePath": "dist/storybook/movies-database"
+        "buildTarget": "pet-store:build-storybook",
+        "staticFilePath": "dist/storybook/pet-store"
       },
       "configurations": {
         "ci": {
-          "buildTarget": "movies-database:build-storybook:ci"
+          "buildTarget": "pet-store:build-storybook:ci"
         }
       }
     }

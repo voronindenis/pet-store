@@ -7,13 +7,17 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
+    "target": "es5",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {},
+    "paths": {
+      "~/*": [
+        "src/*"
+      ],
+    },
     "jsx": "react-jsx",
     "allowJs": false,
     "esModuleInterop": false,
