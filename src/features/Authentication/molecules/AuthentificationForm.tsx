@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
-import { Form, Input, Button, Row, Col, Typography } from 'antd';
+import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Card } from 'antd';
 
-import { IUser } from '~/api';
+import { IUser } from '~/api/Api';
 
 interface IFormValues {
   firstName?: string;
@@ -13,17 +14,18 @@ interface IFormValues {
   password: string;
 }
 
-export interface IAuthenticationFormProps {
+export interface IAuthenticationForm {
   createUser: (user: IUser) => void;
-  login: (username?: string, password?: string) => void;
+  login: (username: string, password: string) => void;
 }
 
-export const AuthenticationForm: React.FC<IAuthenticationFormProps> = (props) => {
+export const AuthenticationForm: React.FC<IAuthenticationForm> = (props) => {
   const { createUser, login } = props;
-  const [isSignup, setIsSignup] = useState(false);
+
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const onFinish = (values: IFormValues) => {
-    isSignup
+    isSignUp
       ? createUser({
           firstName: values.firstName,
           lastName: values.lastName,
@@ -35,38 +37,33 @@ export const AuthenticationForm: React.FC<IAuthenticationFormProps> = (props) =>
       : login(values.username, values.password);
   };
 
-  const toggleForm = () => {
-    setIsSignup(!isSignup);
-  };
-
   return (
-    <Row
-      justify='center'
-      align='middle'
-      style={{ minHeight: '100vh' }}
-    >
-      <Col span={8}>
-        <Typography.Title
-          level={2}
-          data-testid='authentication-title'
-        >
-          Pet Store
-        </Typography.Title>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Card
+        title={isSignUp ? 'Sign Up' : 'Sign In'}
+        style={{ width: 300 }}
+      >
         <Form
-          name='authentication'
+          name='normal_login'
+          className='login-form'
           initialValues={{ remember: true }}
           onFinish={onFinish}
-          data-testid='authentication-form'
         >
-          {isSignup && (
+          {isSignUp && (
             <>
               <Form.Item
                 name='firstName'
                 rules={[{ required: true, message: 'Please input your First Name!' }]}
               >
                 <Input
-                  data-testid='firstName-input'
+                  prefix={
+                    <UserOutlined
+                      className='site-form-item-icon'
+                      rev={undefined}
+                    />
+                  }
                   placeholder='First Name'
+                  data-testid='first-name-input'
                 />
               </Form.Item>
 
@@ -75,8 +72,14 @@ export const AuthenticationForm: React.FC<IAuthenticationFormProps> = (props) =>
                 rules={[{ required: true, message: 'Please input your Last Name!' }]}
               >
                 <Input
-                  data-testid='lastName-input'
+                  prefix={
+                    <UserOutlined
+                      className='site-form-item-icon'
+                      rev={undefined}
+                    />
+                  }
                   placeholder='Last Name'
+                  data-testid='last-name-input'
                 />
               </Form.Item>
 
@@ -85,18 +88,30 @@ export const AuthenticationForm: React.FC<IAuthenticationFormProps> = (props) =>
                 rules={[{ required: true, message: 'Please input your Email!' }]}
               >
                 <Input
-                  data-testid='email-input'
+                  prefix={
+                    <MailOutlined
+                      className='site-form-item-icon'
+                      rev={undefined}
+                    />
+                  }
                   placeholder='Email'
+                  data-testid='email-input'
                 />
               </Form.Item>
 
               <Form.Item
                 name='phone'
-                rules={[{ required: true, message: 'Please input your Phone Number!' }]}
+                rules={[{ required: true, message: 'Please input your Phone!' }]}
               >
                 <Input
+                  prefix={
+                    <PhoneOutlined
+                      className='site-form-item-icon'
+                      rev={undefined}
+                    />
+                  }
+                  placeholder='Phone'
                   data-testid='phone-input'
-                  placeholder='Phone Number'
                 />
               </Form.Item>
             </>
@@ -107,8 +122,14 @@ export const AuthenticationForm: React.FC<IAuthenticationFormProps> = (props) =>
             rules={[{ required: true, message: 'Please input your Username!' }]}
           >
             <Input
-              data-testid='username-input'
+              prefix={
+                <UserOutlined
+                  className='site-form-item-icon'
+                  rev={undefined}
+                />
+              }
               placeholder='Username'
+              data-testid='username-input'
             />
           </Form.Item>
 
@@ -116,35 +137,38 @@ export const AuthenticationForm: React.FC<IAuthenticationFormProps> = (props) =>
             name='password'
             rules={[{ required: true, message: 'Please input your Password!' }]}
           >
-            <Input.Password
-              data-testid='password-input'
+            <Input
+              prefix={
+                <LockOutlined
+                  className='site-form-item-icon'
+                  rev={undefined}
+                />
+              }
+              type='password'
               placeholder='Password'
+              data-testid='password-input'
             />
           </Form.Item>
 
-          <Form.Item data-testid='submit-button-item'>
+          <Form.Item>
             <Button
               type='primary'
               htmlType='submit'
-              data-testid='submit-button'
+              className='login-form-button'
+              data-testid={isSignUp ? 'sign-up-btn' : 'sign-in-btn'}
             >
-              {isSignup ? 'Sign Up' : 'Sign In'}
+              {isSignUp ? 'Sign Up' : 'Sign In'}
             </Button>
-          </Form.Item>
-
-          <Form.Item data-testid='toggle-form-button-item'>
-            <Button
-              type='link'
-              onClick={toggleForm}
-              data-testid='toggle-form-button'
+            Or{' '}
+            <a
+              onClick={() => setIsSignUp(!isSignUp)}
+              data-testid='switch-form-link'
             >
-              {isSignup ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
-            </Button>
+              {isSignUp ? 'sign in instead' : 'sign up instead'}
+            </a>
           </Form.Item>
         </Form>
-      </Col>
-    </Row>
+      </Card>
+    </div>
   );
 };
-
-export default AuthenticationForm;

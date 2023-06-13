@@ -1,69 +1,62 @@
 import React from 'react';
 
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 
 import { AuthenticationForm } from '../../molecules';
 
-describe('<AuthenticationForm />', () => {
-  const mockLogin = jest.fn();
-  const mockCreateUser = jest.fn();
+describe('AuthenticationForm', () => {
+  let createUser: jest.Mock;
+  let login: jest.Mock;
 
   beforeEach(() => {
+    createUser = jest.fn();
+    login = jest.fn();
     render(
       <AuthenticationForm
-        login={mockLogin}
-        createUser={mockCreateUser}
+        createUser={createUser}
+        login={login}
       />,
     );
   });
 
-  it('renders title', () => {
-    expect(screen.getByTestId('authentication-title').textContent).toBe('Pet Store');
+  it('switches between sign up and sign in forms', async () => {
+    expect(screen.getByTestId('sign-in-btn')).toBeInTheDocument();
+    expect(screen.queryByTestId('first-name-input')).toBeNull();
+
+    fireEvent.click(screen.getByTestId('switch-form-link'));
+
+    await waitFor(() => expect(screen.getByTestId('sign-up-btn')).toBeInTheDocument());
+    expect(screen.getByTestId('first-name-input')).toBeInTheDocument();
   });
 
-  it('renders form and switches between Sign In and Sign Up', () => {
-    const signInButton = screen.getByTestId('submit-button');
-    const toggleButton = screen.getByTestId('toggle-form-button');
+  it('calls login on sign in form submit', async () => {
+    fireEvent.change(screen.getByTestId('username-input'), { target: { value: 'testUser' } });
+    fireEvent.change(screen.getByTestId('password-input'), { target: { value: 'testPass' } });
+    fireEvent.click(screen.getByTestId('sign-in-btn'));
 
-    expect(screen.getByTestId('authentication-form')).toBeInTheDocument();
-    expect(signInButton.textContent).toBe('Sign In');
-    expect(toggleButton.textContent).toBe("Don't have an account? Sign Up");
-
-    fireEvent.click(toggleButton);
-
-    expect(signInButton.textContent).toBe('Sign Up');
-    expect(toggleButton.textContent).toBe('Already have an account? Sign In');
+    await waitFor(() => expect(login).toHaveBeenCalledWith('testUser', 'testPass'));
   });
 
-  it('should call the login callback with the correct values when sign in button is clicked', async () => {
-    fireEvent.input(screen.getByTestId('username-input'), { target: { value: 'testuser' } });
-    fireEvent.input(screen.getByTestId('password-input'), { target: { value: 'testpassword' } });
+  it('calls createUser on sign up form submit', async () => {
+    fireEvent.click(screen.getByTestId('switch-form-link'));
 
-    fireEvent.click(screen.getByTestId('submit-button'));
-
-    await waitFor(() => expect(mockLogin).toHaveBeenCalledWith('testuser', 'testpassword'));
-  });
-
-  it('should call the createUser callback with the correct values when sign up button is clicked', async () => {
-    fireEvent.click(screen.getByTestId('toggle-form-button'));
-
-    fireEvent.input(screen.getByTestId('firstName-input'), { target: { value: 'John' } });
-    fireEvent.input(screen.getByTestId('lastName-input'), { target: { value: 'Doe' } });
-    fireEvent.input(screen.getByTestId('email-input'), { target: { value: 'johndoe@email.com' } });
-    fireEvent.input(screen.getByTestId('phone-input'), { target: { value: '1234567890' } });
-    fireEvent.input(screen.getByTestId('username-input'), { target: { value: 'johndoe' } });
-    fireEvent.input(screen.getByTestId('password-input'), { target: { value: 'password' } });
-
-    fireEvent.click(screen.getByTestId('submit-button'));
+    fireEvent.change(screen.getByTestId('first-name-input'), { target: { value: 'firstName' } });
+    fireEvent.change(screen.getByTestId('last-name-input'), { target: { value: 'lastName' } });
+    fireEvent.change(screen.getByTestId('email-input'), { target: { value: 'test@test.com' } });
+    fireEvent.change(screen.getByTestId('phone-input'), { target: { value: '123456789' } });
+    fireEvent.change(screen.getByTestId('username-input'), { target: { value: 'testUser' } });
+    fireEvent.change(screen.getByTestId('password-input'), { target: { value: 'testPass' } });
+    fireEvent.click(screen.getByTestId('sign-up-btn'));
 
     await waitFor(() =>
-      expect(mockCreateUser).toHaveBeenCalledWith({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'johndoe@email.com',
-        phone: '1234567890',
-        username: 'johndoe',
-        password: 'password',
+      expect(createUser).toHaveBeenCalledWith({
+        firstName: 'firstName',
+        lastName: 'lastName',
+        email: 'test@test.com',
+        phone: '123456789',
+        username: 'testUser',
+        password: 'testPass',
       }),
     );
   });

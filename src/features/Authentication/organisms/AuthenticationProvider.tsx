@@ -1,16 +1,21 @@
-import React from 'react';
+import * as React from 'react';
 
 import { getApi, IUser } from '~/api';
-import { AuthenticationForm } from '~/features/Authentication/molecules';
 import { useAxiosRequest } from '~/hooks/useAxiosRequest';
 
-interface IAuthContext {
+import { AuthenticationForm } from '../molecules';
+
+interface IAuthenticationContext {
   error: string | null;
   isAuthorized: boolean;
   logout: () => void;
 }
 
-const AuthenticationContext = React.createContext<IAuthContext>({
+export interface IAuthenticationProvider {
+  children?: React.ReactNode | undefined;
+}
+
+const AuthenticationContext = React.createContext<IAuthenticationContext>({
   error: null,
   isAuthorized: false,
   logout: () => void 0,
@@ -18,7 +23,7 @@ const AuthenticationContext = React.createContext<IAuthContext>({
 
 export const useAuthenticationContext = () => React.useContext(AuthenticationContext);
 
-export const AuthenticationProvider: React.FC<{ children?: React.ReactNode | undefined }> = (props) => {
+export const AuthenticationProvider: React.FC<IAuthenticationProvider> = (props) => {
   const { children } = props;
 
   const [isAuthorized, setAuthorizedStatus] = React.useState<boolean>(false);
@@ -29,7 +34,7 @@ export const AuthenticationProvider: React.FC<{ children?: React.ReactNode | und
   const [$createUser, createUserRp] = useAxiosRequest(getApi, 'createUser', null);
 
   const login = React.useCallback(
-    (username?: string, password?: string) => {
+    (username: string, password: string) => {
       loginUser([{ username, password }]);
     },
     [loginUser],
@@ -59,13 +64,10 @@ export const AuthenticationProvider: React.FC<{ children?: React.ReactNode | und
     if (createUserRp.error) {
       setError(createUserRp.error.message);
     }
-  }, [createUserRp, loginUserRp]);
-
-  React.useEffect(() => {
     if (logoutUserRp.data) {
       setAuthorizedStatus(false);
     }
-  }, [logoutUserRp]);
+  }, [createUserRp.data, createUserRp.error, loginUserRp.data, loginUserRp.error, logoutUserRp.data]);
 
   return isAuthorized ? (
     <AuthenticationContext.Provider value={{ error, isAuthorized, logout }}>{children}</AuthenticationContext.Provider>

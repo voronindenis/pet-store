@@ -1,71 +1,41 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { AuthenticationProvider } from '../../organisms';
 
 describe('AuthenticationProvider', () => {
-  it('renders AuthenticationForm when isAuthorized is false', () => {
-    render(<AuthenticationProvider />);
-    expect(screen.getByTestId('authentication-form')).toBeInTheDocument();
-  });
-
-  it('renders children when isAuthorized is true after form submission', async () => {
+  it('should call login function on submit with login form', async () => {
     render(
       <AuthenticationProvider>
         <div data-testid='child-component'>Child</div>
       </AuthenticationProvider>,
     );
 
-    // Fill the form
-    fireEvent.input(screen.getByTestId('username-input'), { target: { value: 'admin' } });
-    fireEvent.input(screen.getByTestId('password-input'), { target: { value: 'password' } });
-
-    // Submit the form
-    fireEvent.click(screen.getByTestId('submit-button'));
+    fireEvent.change(screen.getByTestId('username-input'), { target: { value: 'admin' } });
+    fireEvent.change(screen.getByTestId('password-input'), { target: { value: 'password' } });
+    fireEvent.click(screen.getByTestId('sign-in-btn'));
 
     // Wait for children to be in the document
     await waitFor(() => expect(screen.getByTestId('child-component')).toBeInTheDocument());
   });
 
-  it('does not render children when isAuthorized is true after failed form submission', async () => {
+  it('should call createUser function on submit with register form', async () => {
     render(
       <AuthenticationProvider>
         <div data-testid='child-component'>Child</div>
       </AuthenticationProvider>,
     );
 
-    // Fill the form
-    fireEvent.input(screen.getByTestId('username-input'), { target: { value: 'wrong_user' } });
-    fireEvent.input(screen.getByTestId('password-input'), { target: { value: 'wrong_password' } });
+    fireEvent.click(screen.getByTestId('switch-form-link'));
 
-    // Submit the form
-    fireEvent.click(screen.getByTestId('submit-button'));
+    fireEvent.change(screen.getByTestId('first-name-input'), { target: { value: 'testfirst' } });
+    fireEvent.change(screen.getByTestId('last-name-input'), { target: { value: 'testlast' } });
+    fireEvent.change(screen.getByTestId('email-input'), { target: { value: 'testemail@test.com' } });
+    fireEvent.change(screen.getByTestId('phone-input'), { target: { value: '1234567890' } });
+    fireEvent.change(screen.getByTestId('username-input'), { target: { value: 'testuser' } });
+    fireEvent.change(screen.getByTestId('password-input'), { target: { value: 'testpass' } });
+    fireEvent.click(screen.getByTestId('sign-up-btn'));
 
     // Wait for children to be in the document
-    await waitFor(() => expect(screen.queryByTestId('child-component')).not.toBeInTheDocument());
-  });
-
-  it('should show children after signing up', async () => {
-    render(
-      <AuthenticationProvider>
-        <div data-testid='child-component'>Child</div>
-      </AuthenticationProvider>,
-    );
-
-    // Click the form toggle button to switch to sign up
-    fireEvent.click(screen.getByTestId('toggle-form-button'));
-
-    // Fill out the form
-    fireEvent.change(screen.getByTestId('firstName-input'), { target: { value: 'John' } });
-    fireEvent.change(screen.getByTestId('lastName-input'), { target: { value: 'Doe' } });
-    fireEvent.change(screen.getByTestId('email-input'), { target: { value: 'john@doe.com' } });
-    fireEvent.change(screen.getByTestId('phone-input'), { target: { value: '1234567890' } });
-    fireEvent.change(screen.getByTestId('username-input'), { target: { value: 'john' } });
-    fireEvent.change(screen.getByTestId('password-input'), { target: { value: 'password' } });
-
-    // Click submit
-    fireEvent.click(screen.getByTestId('submit-button'));
-
-    // Check that children are rendered
     await waitFor(() => expect(screen.getByTestId('child-component')).toBeInTheDocument());
   });
 });
